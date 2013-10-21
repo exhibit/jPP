@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>jQuery Plugin Patterns</title>
+<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+<script>
+;(function($,win,undefined){
+	var pName="Orz";
+	var defaults = {
+            auto:false,
+			style:true,
+			bg:'green'
+    };
+	defaults.style && $(function(){$("head").append("<style plugin="+pName+">p{color:white;font-size:20px}</style>")});
+	$.fn[pName]=function(options){
+		if(typeof options === 'object' || !options){
+			var $opts= $.extend(defaults,options);
+			return this.each(function(){		
+				if (!$.data(this,'plugin_' + pName)){
+					var mod=new Plugin($(this),$opts);
+						$.data(mod,'tp',$(this).offset()['top']);//测试用
+						mod.init();
+						$opts.auto && mod.generate();
+					$.data(this,'plugin_' + pName,mod);
+				}
+			});
+		}else if(typeof options === 'string'){
+			return this.each(function(){
+				var data=$.data(this,'plugin_' + pName);
+				if(data){
+					if( options === "hide"){
+						data["hide"]();
+					}
+					if( options === "show"){
+						data["show"]();
+					}
+					if (options === "destroy") {
+						$.data(this,'plugin_' + pName,null);
+					}
+				}
+			});
+		}else{return this}
+	};
+	function Plugin($this,$opts){
+		this.opts = $opts
+		this.$e = $this;
+	};
+	Plugin.prototype={
+		constructor:Plugin,
+		init:function(){
+			this.$e.css('background',this.opts.bg).html($.data(this,'tp'))
+		},
+		generate:function(){
+			 if(this.abc) return this.abc;
+			 this.adc="abc";
+			 return this.abc;
+		},
+		hide:function(){
+			this.$e.css('display','none')
+		},
+		show:function(){
+			this.$e.css('display','block')
+		}
+	}
+	$.fn[pName].bar = function(txt) {// 还不知道怎么调用....
+		return '<strong>' + txt + '</strong>';
+	};
+	$.fn.log = function (msg) {
+		win.console && console.log && win.console.log("%s: %o", msg||'$', this,this.length);
+		return this;
+	};
+})(jQuery,window);
+/* */
+(function($){
+    $.extend($.fn,{
+        myplugin: function(){
+            // your plugin logic
+        }
+    });
+})(jQuery);
+</script>
+<style>
+.bd{border:5px solid black}
+</style>
+</head>
+<body>
+<p>1</p><p>2</p><p>3</p>
+<button onclick="hide()">hide</button>
+<button onclick="show()">show</button>
+<button onclick="destroy()">destroy</button>
+<script>
+$(function(){
+	$("p").Orz().addClass('bd')
+});
+function hide(){
+	$("p").Orz("hide");
+}
+function show(){
+	$("p").Orz("show");
+}
+function destroy(){
+	$("p").Orz("destroy");
+}
+
+</script>
+</body>
+</html>
