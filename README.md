@@ -1,0 +1,4 @@
+jPP
+===
+
+jQuery Plugin Patterns
