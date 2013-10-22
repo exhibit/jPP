@@ -3,53 +3,44 @@
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 <title>jQuery Plugin Patterns @gh-pages</title>
-<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js" type="text/javascript"></script>
 <script>
 ;(function($,win,undefined){
-	var pName="Orz";
-	var defaults = {
-            auto:false,
+	var pName="Orz",
+	defaults = {
 			style:true,
 			bg:'green'
-    };
-	defaults.style && $(function(){$("head").append("<style plugin="+pName+">p{color:white;font-size:20px}</style>")});
+	};
+	defaults.style && $(function(){$("head").append("<style plugin="+pName+">.Orz_red{border:5px solid red}.Orz_orange{border:5px solid orange}.Orz_yellow{border:5px solid yellow;}</style>")});
+	
 	$.fn[pName]=function(options){
-		if(typeof options === 'object' || !options){
+		if(typeof options === 'object' || ! options){
 			var $opts= $.extend(defaults,options);
-			return this.each(function(){		
-				if (!$.data(this,'plugin_' + pName)){
-					var mod=new Plugin($(this),$opts);
-						$.data(mod,'tp',$(this).offset()['top']);//测试用
-						mod.init();
-						$opts.auto && mod.generate();
-					$.data(this,'plugin_' + pName,mod);
+			return this.each(function(){
+				if (!$.data(this,'plugin-' + pName)){//this --> html元素
+					var mod=new Plugin($(this),$opts);//$(this) --> jquery包装对象
+						mod.init($.data(mod,'tp',$(this).offset()['top']));// mod 对应 -->实例的this
+						$.data(this,'plugin-' + pName,mod);
 				}
 			});
 		}else if(typeof options === 'string'){
-			return this.each(function(){
-				var data=$.data(this,'plugin_' + pName);
-				if(data){
-					if( options === "hide"){
-						data["hide"]();
-					}
-					if( options === "show"){
-						data["show"]();
-					}
-					if (options === "destroy") {
-						$.data(this,'plugin_' + pName,null);
-					}
+			return this.each(function(k,v){
+				var data=$.data(this,'plugin-' + pName);
+				if(data && data[options]){
+					return data[options](options);
 				}
 			});
-		}else{return this}
+		}
 	};
-	function Plugin($this,$opts){
-		this.opts = $opts
-		this.$e = $this;
+
+	function Plugin($this,$opts){// this 指向 实例
+		this.opts = $opts;
+		this.$e = $this; 
 	};
 	Plugin.prototype={
 		constructor:Plugin,
-		init:function(){
-			this.$e.css('background',this.opts.bg).html($.data(this,'tp'))
+		init:function(pos){
+			this.$e.css('background',this.opts.bg).html($.data(this,'tp')+":"+pos);//this == mod
 		},
 		generate:function(){
 			 if(this.abc) return this.abc;
@@ -61,15 +52,11 @@
 		},
 		show:function(){
 			this.$e.css('display','block')
+		},
+		theme:function(){
 		}
 	}
-	$.fn[pName].bar = function(txt) {// 还不知道怎么调用....
-		return '<strong>' + txt + '</strong>';
-	};
-	$.fn.log = function (msg) {
-		win.console && console.log && win.console.log("%s: %o", msg||'$', this,this.length);
-		return this;
-	};
+	$.fn.log = function (msg) {win.console && console.log && win.console.log("%s: %o", msg||'$', this,this.length);return this;};
 })(jQuery,window);
 /* */
 (function($){
@@ -81,28 +68,28 @@
 })(jQuery);
 </script>
 <style>
-.bd{border:5px solid black}
+
 </style>
 </head>
 <body>
 <p>1</p><p>2</p><p>3</p>
 <button onclick="hide()">hide</button>
-<button onclick="show()">show</button>
+<button onclick="show()">show</button><br/><br/>
+<button onclick="theme('red')">style01</button>
+<button onclick="theme('orange')">style02</button>
+<button onclick="theme('yellow')">style03</button><br/><br/>
 <button onclick="destroy()">destroy</button>
 <script>
 $(function(){
-	$("p").Orz().addClass('bd')
+	$("p").Orz()
 });
-function hide(){
-	$("p").Orz("hide");
-}
-function show(){
-	$("p").Orz("show");
-}
-function destroy(){
-	$("p").Orz("destroy");
-}
 
+function hide(){$("p").Orz("hide");}
+function show(){$("p").Orz("show");}
+function destroy(){$("p").Orz("destroy");}
+function theme(value){
+	$("p").Orz("theme",value)
+}
 </script>
 </body>
 </html>
