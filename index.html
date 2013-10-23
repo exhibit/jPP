@@ -8,44 +8,43 @@
 ;(function($,win,undefined){
 	var pName="Orz",
 	defaults = {
-			style:true,
-			bg:'green'
+			Style:true,
+			setTheme:'red'
 	};
-	defaults.style && $(function(){$("head").append("<style plugin="+pName+">.Orz_red{border:5px solid red}.Orz_orange{border:5px solid orange}.Orz_yellow{border:5px solid yellow;}</style>")});
+	defaults.Style && $(function(){$("head").append("<style plugin="+pName+">.Orz_red{background:red;border:5px solid black}.Orz_blue{background:blue;border:5px solid orange}.Orz_pink{background:pink;border:5px solid yellow;}</style>")});
 	
-	$.fn[pName]=function(options){
-		if(typeof options === 'object' || ! options){
+	$.fn[pName]=function(options,value){
+		if(typeof options === 'object' || !arguments.length){
 			var $opts= $.extend(defaults,options);
 			return this.each(function(){
 				if (!$.data(this,'plugin-' + pName)){//this --> html元素
-					var mod=new Plugin($(this),$opts);//$(this) --> jquery包装对象
-						mod.init($.data(mod,'tp',$(this).offset()['top']));// mod 对应 -->实例的this
+					var mod=new Plugin($(this));//$(this) --> jquery包装对象
+						$.data(mod,'tp',$(this).offset()['top'])// mod 对应 -->实例的this
+						mod.init($opts);
 						$.data(this,'plugin-' + pName,mod);
 				}
 			});
 		}else if(typeof options === 'string'){
-			return this.each(function(k,v){
+			return this.each(function(){
 				var data=$.data(this,'plugin-' + pName);
 				if(data && data[options]){
-					return data[options](options);
+					return data[options](value && value);
 				}
 			});
 		}
 	};
 
-	function Plugin($this,$opts){// this 指向 实例
-		this.opts = $opts;
+	function Plugin($this){// this 指向 实例
 		this.$e = $this; 
 	};
 	Plugin.prototype={
 		constructor:Plugin,
-		init:function(pos){
-			this.$e.css('background',this.opts.bg).html($.data(this,'tp')+":"+pos);//this == mod
+		init:function(opts){
+			this.opts=opts;
+			this.theme(opts.setTheme);
+			this.$e.html($.data(this,'tp'))
 		},
 		generate:function(){
-			 if(this.abc) return this.abc;
-			 this.adc="abc";
-			 return this.abc;
 		},
 		hide:function(){
 			this.$e.css('display','none')
@@ -53,7 +52,8 @@
 		show:function(){
 			this.$e.css('display','block')
 		},
-		theme:function(){
+		theme:function(c){
+			this.$e.attr('class',"Orz_"+c||this.opts.setTheme);
 		}
 	}
 	$.fn.log = function (msg) {win.console && console.log && win.console.log("%s: %o", msg||'$', this,this.length);return this;};
@@ -61,9 +61,7 @@
 /* */
 (function($){
     $.extend($.fn,{
-        myplugin: function(){
-            // your plugin logic
-        }
+        myplugin: function(){}
     });
 })(jQuery);
 </script>
@@ -73,23 +71,18 @@
 </head>
 <body>
 <p>1</p><p>2</p><p>3</p>
-<button onclick="hide()">hide</button>
-<button onclick="show()">show</button><br/><br/>
-<button onclick="theme('red')">style01</button>
-<button onclick="theme('orange')">style02</button>
-<button onclick="theme('yellow')">style03</button><br/><br/>
-<button onclick="destroy()">destroy</button>
+<button onclick='$("p").Orz("hide")'>hide</button>
+<button onclick='$("p").Orz("show")'>show</button><br/><br/>
+<button onclick='$("p").Orz("theme","red")'>style01</button>
+<button onclick='$("p").Orz("theme","blue")'>style02</button>
+<button onclick='$("p").Orz("theme","pink")'>style03</button><br/><br/>
+<button onclick='$("p").Orz("destroy")'>destroy</button>
 <script>
 $(function(){
 	$("p").Orz()
 });
 
-function hide(){$("p").Orz("hide");}
-function show(){$("p").Orz("show");}
-function destroy(){$("p").Orz("destroy");}
-function theme(value){
-	$("p").Orz("theme",value)
-}
+
 </script>
 </body>
 </html>
