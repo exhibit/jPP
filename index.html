@@ -54,6 +54,9 @@
 		},
 		theme:function(c){
 			this.$e.attr('class',"Orz_"+c||this.opts.setTheme);
+		},
+		distroy:function(btnEle){
+			return btnEle.attr('disabled','disabled');
 		}
 	}
 	$.fn.log = function (msg) {win.console && console.log && win.console.log("%s: %o", msg||'$', this,this.length);return this;};
