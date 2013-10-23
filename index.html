@@ -14,7 +14,7 @@
 	defaults.Style && $(function(){$("head").append("<style plugin="+pName+">.Orz_red{background:red;border:5px solid black}.Orz_blue{background:blue;border:5px solid orange}.Orz_pink{background:pink;border:5px solid yellow;}</style>")});
 	
 	$.fn[pName]=function(options,value){
-		if(typeof options === 'object' || ! options){
+		if(typeof options === 'object' || !arguments.length){
 			var $opts= $.extend(defaults,options);
 			return this.each(function(){
 				if (!$.data(this,'plugin-' + pName)){//this --> html元素
@@ -45,9 +45,6 @@
 			this.$e.html($.data(this,'tp'))
 		},
 		generate:function(){
-			 if(this.abc) return this.abc;
-			 this.adc="abc";
-			 return this.abc;
 		},
 		hide:function(){
 			this.$e.css('display','none')
@@ -64,9 +61,7 @@
 /* */
 (function($){
     $.extend($.fn,{
-        myplugin: function(){
-            // your plugin logic
-        }
+        myplugin: function(){}
     });
 })(jQuery);
 </script>
@@ -86,6 +81,8 @@
 $(function(){
 	$("p").Orz()
 });
+
+
 </script>
 </body>
 </html>
