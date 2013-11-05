@@ -31,7 +31,12 @@
 		$.fn[pName] = sav
 		return this;
 	}
-	
+	var Evts={//this 属于 Evts
+		create:function(){
+			var temp=document.getElementById("tmp").value;
+			return temp;
+		}
+	};
 	function Plugin($this,opts){
 		this.$e = $this;
 		this.opts=opts;
@@ -51,19 +56,14 @@
 		},
 		theme:function(){
 			this.$e.attr('class',this.opts.theme);
-			Evts.add(this.$e)
+		},
+		add:function(){
+			var temp = this.temp || (this.temp=Evts.create());
+			$(temp).appendTo(this.$e).on('click',function(){
+				alert(this.innerHTML);
+			});
 		}
 	}
-	Evts={
-		add:function($e){
-			var temp = this.temp || ( this.temp = "<b>:theme</b>"); 
-			if(temp){
-				$(temp).appendTo($e).on('click',Evts.on)
-			}
-		},
-		on:function(){
-			alert(this.innerHTML)
-		}
-	};
+
 	$.fn.log = function (msg) {win.console && console.log && win.console.log("%s: %o", msg||'$', this,this.length);return this;};
 })(jQuery,window);
