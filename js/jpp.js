@@ -3,21 +3,9 @@
 	var pName="Orz",
 	defaults = {
 			Style:true,
-			setTheme:'red'
+			theme:'red'
 	},
-	isIE6 = $.browser.msie && $.browser.version === '6.0',
-	idx=0,
-	Evts={
-		add:function($e){
-			var temp = this.temp || ( this.temp = "<b>:"+(idx++)+"</b>"); 
-			if(temp){
-				$(temp).appendTo($e).on('click',Evts.on)
-			}
-		},
-		on:function(){
-			alert(this.innerHTML)
-		}
-	};
+	isIE6 = $.browser.msie && $.browser.version === '6.0',sav;
 	defaults.Style && $(function(){$("head").append("<style plugin="+pName+">.red{background:red;border:5px solid black}.blue{background:blue;border:5px solid orange}.pink{background:pink;border:5px solid yellow;}</style>")});
 	$.fn[pName]=function(options,value){
 		if(typeof options === 'object' || !arguments.length){
@@ -32,12 +20,18 @@
 			return this.each(function(){
 				var data=$.data(this,'plugin-' + pName);
 				if(data && data[options]){
-					value && (data.opts['setTheme']=value);
+					value && (data.opts[options]=value);
 					return data[options]();
 				}
 			});
 		}
 	};
+	sav = $.fn[pName];
+	$.fn[pName].noConflict = function () {
+		$.fn[pName] = sav
+		return this;
+	}
+	
 	function Plugin($this,opts){
 		this.$e = $this;
 		this.opts=opts;
@@ -56,9 +50,20 @@
 			this.$e.css('display','block')
 		},
 		theme:function(){
-			this.$e.attr('class',this.opts.setTheme);
+			this.$e.attr('class',this.opts.theme);
 			Evts.add(this.$e)
 		}
 	}
+	Evts={
+		add:function($e){
+			var temp = this.temp || ( this.temp = "<b>:theme</b>"); 
+			if(temp){
+				$(temp).appendTo($e).on('click',Evts.on)
+			}
+		},
+		on:function(){
+			alert(this.innerHTML)
+		}
+	};
 	$.fn.log = function (msg) {win.console && console.log && win.console.log("%s: %o", msg||'$', this,this.length);return this;};
 })(jQuery,window);
