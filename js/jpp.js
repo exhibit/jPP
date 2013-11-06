@@ -69,9 +69,30 @@
 		theme:function(){
 			this.$e.attr('class',this.opts.theme);
 		},
-		add:function(e){
+		add:function(){
 			var temp = this.temp || (this.temp=Evts.create());
 			$(temp).appendTo(this.$e).on('click',Evts.check())
+		},
+		pos:function(){
+			var left = null, top = null, right = null, bottom = null;
+			var w = $("#test").outerWidth(true),h = $("#test").outerHeight(true);
+			var W = $(win).width(),H = $(win).height();
+			var offset=10;
+			var cX = (W/2) - (w/2),cY = (H/2) - (h/2);
+			var rX = W - w - offset,bY = H - h - offset;
+			switch("rm"){
+				case 'cm': left = cX;top = cY;break;
+				case 'lt': left = offset;top = offset;break;
+				case 'ct': left = cX;top = offset;break;
+				case 'rt': left = rX;top = offset;break;
+				case 'rm': left = rX;top = cY;break;
+				case 'rb': left = rX;top = bY;break;
+				case 'cb': left = cX;top = bY;break;
+				case 'lb': left = offset;top = bY;break;
+				case 'lm': left = offset;top = cY;break;
+     		}
+     		$("#test").show().css({left:(left ? left + 'px' : 'auto'), top:(top ? top + 'px' : 'auto'), bottom:(bottom ? bottom + 'px' : 'auto'), right: (right ? right + 'px' : 'auto') });
+
 		},
 		destroy:function(){
 			$.data(this.$e[0],'plugin-' + pName,null);
