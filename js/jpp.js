@@ -31,10 +31,22 @@
 		$.fn[pName] = sav
 		return this;
 	}
-	var Evts={//this 属于 Evts
+	var Evts={
 		create:function(){
-			var temp=document.getElementById("tmp").value;
-			return temp;
+			return $.trim(document.getElementById("tmp").value);
+		},
+		check:function(){
+			//	isIE6 ? function(){alert("ie6")}:function(){alert("no")}
+			return {
+				'ie':function(w){
+					alert(this.innerHTML + '--ie--');
+					$(this).remove();
+				},
+				'w3c':function(w){
+					alert(this.innerHTML + '--w3c--');
+					$(this).remove();
+				}
+			}['\v'=='v' ? 'ie' : 'w3c']
 		}
 	};
 	function Plugin($this,opts){
@@ -57,11 +69,13 @@
 		theme:function(){
 			this.$e.attr('class',this.opts.theme);
 		},
-		add:function(){
+		add:function(e){
 			var temp = this.temp || (this.temp=Evts.create());
-			$(temp).appendTo(this.$e).on('click',function(){
-				alert(this.innerHTML);
-			});
+			$(temp).appendTo(this.$e).on('click',Evts.check())
+		},
+		destroy:function(){
+			$.data(this.$e[0],'plugin-' + pName,null);
+			$.removeData(this.$e[0],'plugin-' + pName);
 		}
 	}
 

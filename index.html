@@ -8,6 +8,7 @@
 *{margin:0;padding:0}
 body{padding:10px}
 div,p{margin:10px}
+span{background:white}
 </style>
 </head>
 <body>
@@ -28,7 +29,9 @@ div,p{margin:10px}
 <button onclick='$("div").Orz("theme","blue")'>style02</button>
 <button onclick='$("div").Orz("theme","pink")'>style03</button><br/><br/>
 <button onclick='$("div").Orz("destroy")'>destroy</button>
-<textarea id="tmp" style="display:none"><span>txt</span></textarea>
+<textarea id="tmp" style="display:none">
+	<span>[click!]</span>
+</textarea>
 <script src="js/jpp.js" type="text/javascript"></script>
 <script>
 $("p").Orz();
