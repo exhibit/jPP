@@ -35,15 +35,15 @@
 		create:function(){
 			return $.trim(document.getElementById("tmp").value);
 		},
-		check:function(){
+		check:function(e){
 			//	isIE6 ? function(){alert("ie6")}:function(){alert("no")}
 			return {
-				'ie':function(w){
-					alert(this.innerHTML + '--ie--');
+				'ie':function(e){
+					alert(e.type + '--ie--');
 					$(this).remove();
 				},
-				'w3c':function(w){
-					alert(this.innerHTML + '--w3c--');
+				'w3c':function(e){
+					alert(e.type + '--w3c--');
 					$(this).remove();
 				}
 			}['\v'=='v' ? 'ie' : 'w3c']
