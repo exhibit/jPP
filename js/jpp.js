@@ -81,3 +81,4 @@
 
 	$.fn.log = function (msg) {win.console && console.log && win.console.log("%s: %o", msg||'$', this,this.length);return this;};
 })(jQuery,window);
+/* test */
