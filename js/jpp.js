@@ -1,4 +1,5 @@
 (function($,win,undefined){
+	//for macss
 	'use strict';
 	var pName="Orz",
 	defaults = {
